@@ -1,4 +1,4 @@
-from read_pdfs import extrair_texto_pdf
+from .read_pdfs import extrair_texto_pdf
 
 fundamentos_copywriting = extrair_texto_pdf('fundamentos_copy.pdf')
 

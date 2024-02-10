@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 from openai import OpenAI
-from prompts import get_prompt
+from src.prompts import get_prompt
 
 load_dotenv()
 client = OpenAI()
