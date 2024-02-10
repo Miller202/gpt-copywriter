@@ -1,25 +1,23 @@
 from dotenv import load_dotenv
 import os
-import openai
+from openai import OpenAI
 from prompts import get_prompt
 
 load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI()
 
 def gera_copy(prompt_usuario):
-    prompt_completo = get_prompt(prompt_usuario)
+    prompt_completo = get_prompt()
     
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt_completo,
-        temperature=0.7,
-        max_tokens=256,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": prompt_completo},
+            {"role": "user", "content": prompt_usuario}
+        ]
     )
     
-    return response.choices[0].text.strip()
+    return completion.choices[0].message.content
 
 while True:
     entrada_usuario = input("Digite sua solicitação de copy ou 'sair' para encerrar: ")
