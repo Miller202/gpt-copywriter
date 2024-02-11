@@ -9,6 +9,6 @@ def get_prompt():
 
     Aqui estão alguns fundamentos de copywriting para te ajudar a elaborar as melhores copys: "{fundamentos_copywriting}"
 
-    Por favor, crie uma copy baseada na solicitação do usuário.
+    Por favor, crie uma copy baseada na solicitação do usuário. (Se atente ao contexto do que o usuário está pedindo)
     """
     return prompt_completo

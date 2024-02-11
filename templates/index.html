@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT Copywriter</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>GPT Copywriter</h2>
+        </div>
+        <div id="chat" class="chat-body"></div>
+        <div id="loading">
+            <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="entradaUsuario" placeholder="Digite sua mensagem...">
+            <button onclick="enviarMensagem()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        async function enviarMensagem() {
+            let entradaUsuario = document.getElementById('entradaUsuario');
+            let mensagem = entradaUsuario.value;
+            document.getElementById('loading').style.display = 'flex';
+            let divChat = document.getElementById('chat');
+            divChat.innerHTML += `<div class="mensagem mensagem-usuario">${mensagem}</div>`;
+
+            let resposta = await fetch('/gera_copy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({mensagem: mensagem}),
+            });
+            resposta = await resposta.json();
+
+            document.getElementById('loading').style.display = 'none';
+            divChat.innerHTML += `<div class="mensagem mensagem-chatbot">${resposta.resposta}</div>`;
+            entradaUsuario.value = '';
+            divChat.scrollTop = divChat.scrollHeight;
+        }
+    </script>
+</body>
+</html>

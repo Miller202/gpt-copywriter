@@ -1,12 +1,23 @@
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import os
 from openai import OpenAI
 from src.prompts import get_prompt
 
 load_dotenv()
-client = OpenAI()
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-def gera_copy(prompt_usuario):
+app = Flask(__name__, template_folder='templates')
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/gera_copy', methods=['POST'])
+def gera_copy():
+    data = request.json
+    prompt_usuario = data['mensagem']
+
     prompt_completo = get_prompt()
     
     completion = client.chat.completions.create(
@@ -17,13 +28,7 @@ def gera_copy(prompt_usuario):
         ]
     )
     
-    return completion.choices[0].message.content
+    return jsonify({"resposta": completion.choices[0].message.content})
 
-while True:
-    entrada_usuario = input("Digite sua solicitação de copy ou 'sair' para encerrar: ")
-    if entrada_usuario.lower() == 'sair':
-        print("Encerrando o chatbot de copywriting. Até mais!")
-        break
-    
-    resposta_copy = gera_copy(entrada_usuario)
-    print("Resposta do Chatbot:\n", resposta_copy)
+if __name__ == '__main__':
+    app.run(debug=True)
